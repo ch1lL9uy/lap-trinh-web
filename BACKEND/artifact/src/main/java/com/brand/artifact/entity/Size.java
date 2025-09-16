@@ -18,34 +18,39 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products")
+@Table(name = "sizes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
+public class Size {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
-
-    @Column(nullable = false)
-    private String productName;
-
-    @Column(length = 512)
-    private String description;
-
-    @Column(nullable = false)
-    private String imageUrl;
-
-    // Một Product có nhiều biến thể (ProductItem)
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductItem> productItems;
-
+    private Long sizeId;
+    
+    @Column(name = "size_name", nullable = false)
+    private String sizeName;  // "S", "M", "L", "38", "39"
+    
+    @Column(name = "size_code")
+    private String sizeCode;  // "SM", "MD", "LG"
+    
+    @Column(name = "category")
+    private String category;  // "CLOTHING", "SHOES", "ACCESSORIES"
+    
+    @Column(name = "sort_order")
+    private Integer sortOrder;  // Thứ tự hiển thị: S(1), M(2), L(3)
+    
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
+    
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
+    
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 }
