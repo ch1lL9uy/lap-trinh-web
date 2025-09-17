@@ -44,8 +44,8 @@ public class Category {
     
     // 3. Image URL
     @Column(name = "image_url")
-    private String imageUrl;  // thay vì imageLink
-    
+    private String imageUrl;
+
     // 4. Hierarchy support (Category con/cha)
     @Column(name = "parent_id")
     private Long parentId; 

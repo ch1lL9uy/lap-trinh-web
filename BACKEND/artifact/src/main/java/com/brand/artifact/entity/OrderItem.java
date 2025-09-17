@@ -42,10 +42,10 @@ public class OrderItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     
-    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "unit_price", nullable = false)
     private Double unitPrice;  // Giá tại thời điểm mua
     
-    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_price", nullable = false)
     private Double totalPrice; // quantity * unitPrice
 
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL)

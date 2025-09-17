@@ -4,8 +4,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,8 +38,10 @@ public class ProductItem {
     @Column(nullable = false)
     private Integer stockQuantity;
 
-    @Enumerated(EnumType.STRING)
-    private Size size;   // XS, S, M, L, XL
+    @ManyToOne
+    @JoinColumn(name = "size_id")
+    private Size size;   // Reference to Size entity
+    
     private String color;  // Red, Blue, Black...
 
     @ManyToOne
