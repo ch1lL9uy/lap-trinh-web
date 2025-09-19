@@ -1,9 +1,9 @@
 package com.brand.artifact.entity;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,8 +23,8 @@ import lombok.Setter;
 @Builder
 public class CartItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartItemId;
+    @UuidGenerator
+    private String cartItemId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

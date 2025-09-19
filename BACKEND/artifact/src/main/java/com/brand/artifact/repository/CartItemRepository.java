@@ -11,7 +11,7 @@ import com.brand.artifact.entity.CartItem;
 import com.brand.artifact.entity.ProductItem;
 
 @Repository
-public interface CartItemRepository extends JpaRepository<CartItem, Long> {
+public interface CartItemRepository extends JpaRepository<CartItem, String> {
     
     // Tìm tất cả items trong cart
     List<CartItem> findByCart(Cart cart);

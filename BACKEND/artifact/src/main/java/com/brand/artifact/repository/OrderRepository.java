@@ -10,7 +10,7 @@ import com.brand.artifact.entity.Order;
 import com.brand.artifact.entity.User;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, String> {
     
     // Tìm orders của user
     List<Order> findByUser(User user);

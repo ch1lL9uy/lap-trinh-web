@@ -3,31 +3,29 @@ package com.brand.artifact.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.brand.artifact.dto.request.UserRegisterRequest;
+import com.brand.artifact.dto.response.UserResponse;
 import com.brand.artifact.entity.User;
 
 public interface UserService {
     
-    // Tạo user mới
-    User createUser(User user);
+    // ✅ REGISTRATION - Trả về UserResponse (an toàn)
+    UserResponse registerUser(UserRegisterRequest request);
     
-    // Tìm user theo ID
-    Optional<User> findById(Long userId);
+    // ✅ AUTHENTICATION
+    boolean authenticateUser(String usernameOrEmail, String password);
     
-    // Tìm user theo username
+    // ✅ FIND METHODS
+    Optional<User> findById(String userId);
     Optional<User> findByUsername(String username);
-    
-    // Tìm user theo email
     Optional<User> findByEmail(String email);
     
-    // Authentication
-    boolean authenticateUser(String username, String password);
+    // ✅ VALIDATION METHODS (Spring Boot best practice)
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
     
-    // Update user
-    User updateUser(Long userId, User updatedUser);
-    
-    // Lấy tất cả users
+    // ✅ CRUD OPERATIONS
+    User updateUser(String userId, User updatedUser);
     List<User> getAllUsers();
-    
-    // Delete user
-    boolean deleteUser(Long userId);
+    boolean deleteUser(String userId);
 }

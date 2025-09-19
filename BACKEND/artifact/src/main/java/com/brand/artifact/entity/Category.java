@@ -5,12 +5,11 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -31,8 +30,8 @@ import lombok.Setter;
 @Builder
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    @UuidGenerator
+    private String categoryId;
 
     // 1. Tên category rõ ràng hơn
     @Column(name = "category_name", nullable = false, length = 100)
@@ -48,7 +47,7 @@ public class Category {
 
     // 4. Hierarchy support (Category con/cha)
     @Column(name = "parent_id")
-    private Long parentId; 
+    private String parentId; 
     
     // 5. Display order
     @Column(name = "sort_order")

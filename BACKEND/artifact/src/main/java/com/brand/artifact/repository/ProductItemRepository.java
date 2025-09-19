@@ -8,12 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.brand.artifact.constant.Size;
 import com.brand.artifact.entity.Product;
 import com.brand.artifact.entity.ProductItem;
-import com.brand.artifact.entity.Size;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 
 @Repository
-public interface ProductItemRepository extends JpaRepository<ProductItem, Long> {
+public interface ProductItemRepository extends JpaRepository<ProductItem, String> {
     
     // Tìm variants của một product
     List<ProductItem> findByProduct(Product product);
@@ -22,6 +26,7 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, Long> 
     Optional<ProductItem> findBySku(String sku);
     
     // Tìm theo product và size
+    @Enumerated(EnumType.STRING)
     List<ProductItem> findByProductAndSize(Product product, Size size);
     
     // Tìm theo product và color

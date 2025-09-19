@@ -6,80 +6,124 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.brand.artifact.constant.Role;
+import com.brand.artifact.dto.request.UserRegisterRequest;
+import com.brand.artifact.dto.response.UserResponse;
 import com.brand.artifact.entity.User;
-import com.brand.artifact.repository.UserRepo;
+import com.brand.artifact.exception.ErrorCode;
+import com.brand.artifact.exception.WebServerException;
+import com.brand.artifact.repository.UserRepository;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     
     @Autowired
-    private UserRepo userRepo;
-
+    private UserRepository userRepository;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User createUser(User user) {
-        // Validate email và username unique
-        if (userRepo.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+    public UserResponse registerUser(UserRegisterRequest request) {
+        // ✅ Validation sử dụng custom exception
+        if (existsByUsername(request.getUsername())) {
+            throw new WebServerException(ErrorCode.USER_EXISTED);
         }
-        if (userRepo.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username already exists");
+        if (existsByEmail(request.getEmail())) {
+            throw new WebServerException(ErrorCode.USER_EXISTED);
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // ✅ Convert DTO to Entity (mapping pattern)
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword())) // ✅ Encrypt password
+                .role(Role.USER) // ✅ Default role
+                .build();
 
-        return userRepo.save(user);
+        user = userRepository.save(user);
+        
+        // ✅ Convert Entity to Response DTO (KHÔNG trả password)
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
 
     @Override
-    public Optional<User> findById(Long userId) {
-        return userRepo.findById(userId);
+    public boolean authenticateUser(String usernameOrEmail, String rawPassword) {
+        // ✅ Support login bằng username hoặc email
+        Optional<User> userOpt = findByUsername(usernameOrEmail);
+        if (userOpt.isEmpty()) {
+            userOpt = findByEmail(usernameOrEmail);
+        }
+        
+        if (userOpt.isPresent()) {
+            // ✅ Sử dụng PasswordEncoder để verify
+            return passwordEncoder.matches(rawPassword, userOpt.get().getPassword());
+        }
+        return false;
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findById(String userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
-        return userRepo.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByEmail(String email) {
-        return userRepo.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
-    public boolean authenticateUser(String username, String password) {
-        Optional<User> user = userRepo.findByUsername(username);
-        if (user.isPresent()) {
-            return passwordEncoder.matches(password, user.get().getPassword());
-        }
-        return false;
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     @Override
-    public User updateUser(Long userId, User updatedUser) {
-        Optional<User> existingUser = userRepo.findById(userId);
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setEmail(updatedUser.getEmail());
-            return userRepo.save(user);
-        }
-        throw new RuntimeException("User not found");
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
+    public User updateUser(String userId, User updatedUser) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new WebServerException(ErrorCode.USER_NOT_FOUND));
+        
+        // ✅ Chỉ update các field được phép
+        existingUser.setEmail(updatedUser.getEmail());
+        // Note: Password update nên có endpoint riêng với validation
+        
+        return userRepository.save(existingUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
-        return userRepo.findAll();
+        return userRepository.findAll();
     }
 
     @Override
-    public boolean deleteUser(Long userId) {
-        if (userRepo.existsById(userId)) {
-            userRepo.deleteById(userId);
-            return true;
+    public boolean deleteUser(String userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new WebServerException(ErrorCode.USER_NOT_FOUND);
         }
-        return false;
+        userRepository.deleteById(userId);
+        return true;
     }
 }

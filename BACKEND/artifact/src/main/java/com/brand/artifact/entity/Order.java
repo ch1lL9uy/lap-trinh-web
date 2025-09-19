@@ -3,14 +3,14 @@ package com.brand.artifact.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.brand.artifact.constant.OrderStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -31,8 +31,8 @@ import lombok.Setter;
 @Builder
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    @UuidGenerator
+    private String orderId;
 
     private LocalDateTime orderDate;
 

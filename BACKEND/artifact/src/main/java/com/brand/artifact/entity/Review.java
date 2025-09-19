@@ -2,9 +2,9 @@ package com.brand.artifact.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -24,8 +24,8 @@ import lombok.Setter;
 @Builder
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    @UuidGenerator
+    private String reviewId;
 
     private Integer rating; // 1-5
     private String comment;
@@ -33,11 +33,11 @@ public class Review {
 
     // Review gắn với OrderItem
     @ManyToOne
-    @JoinColumn(name = "order_item_id", nullable = false)
+    @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
 
     // Cũng gắn với User (người viết review)
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

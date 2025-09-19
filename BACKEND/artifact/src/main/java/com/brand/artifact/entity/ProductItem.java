@@ -2,10 +2,11 @@ package com.brand.artifact.entity;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
+import org.hibernate.annotations.UuidGenerator;
+
+import com.brand.artifact.constant.Size;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -26,26 +27,17 @@ import lombok.Setter;
 @Builder
 public class ProductItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productItemId;
+    @UuidGenerator
+    private String productItemId;
 
-    @Column(nullable = false, unique = true)
     private String sku;
-
-    @Column(nullable = false)
     private Double price;
-
-    @Column(nullable = false)
     private Integer stockQuantity;
+    private Size size;   
+    private String color;  
 
     @ManyToOne
-    @JoinColumn(name = "size_id")
-    private Size size;   // Reference to Size entity
-    
-    private String color;  // Red, Blue, Black...
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @OneToMany(mappedBy = "productItem")

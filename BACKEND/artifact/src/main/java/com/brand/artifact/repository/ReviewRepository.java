@@ -10,7 +10,7 @@ import com.brand.artifact.entity.Review;
 import com.brand.artifact.entity.User;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, String> {
     
     // Tìm reviews của user
     List<Review> findByUser(User user);

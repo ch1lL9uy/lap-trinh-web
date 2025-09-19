@@ -1,6 +1,7 @@
 package com.brand.artifact.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,20 +9,22 @@ import org.springframework.stereotype.Repository;
 import com.brand.artifact.entity.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, String> {
     
     // Tìm theo tên category (unique)
-    Category findByCategoryName(String categoryName);
-    
+    Optional<Category> findByCategoryName(String categoryName);
+
     // Check tồn tại
     boolean existsByCategoryName(String categoryName);
     
     // Tìm theo slug (SEO friendly)
-    Category findBySlug(String slug);
+    Optional<Category> findBySlug(String slug);
+
+    boolean existsBySlug(String slug);
     
     // Tìm categories cha (không có parent)
     List<Category> findByParentIdIsNull();
     
     // Tìm subcategories của một category
-    List<Category> findByParentId(Long parentId);
+    List<Category> findByParentId(String parentId);
 }

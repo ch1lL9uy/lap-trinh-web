@@ -9,7 +9,7 @@ import com.brand.artifact.entity.Category;
 import com.brand.artifact.entity.Product;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByProductName(String productName);
     List<Product> findByCategory(Category category);
     List<Product> findByProductNameContainingIgnoreCase(String productName); 

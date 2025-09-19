@@ -9,11 +9,13 @@ import com.brand.artifact.entity.Cart;
 import com.brand.artifact.entity.User;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, String> {
     
     // Tìm cart của user (mỗi user chỉ có 1 cart)
     Optional<Cart> findByUser(User user);
     
     // Tìm cart theo userId
-    Optional<Cart> findByUserUserId(Long userId);
+    Optional<Cart> findByUserUserId(String userId);
+
+    boolean existsByUser(User user);
 }
