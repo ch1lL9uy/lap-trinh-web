@@ -16,5 +16,4 @@ public class UserResponse {
     private String username;
     private String email;
     private Role role;
-    // ❌ KHÔNG bao gồm password - bảo mật
 }
