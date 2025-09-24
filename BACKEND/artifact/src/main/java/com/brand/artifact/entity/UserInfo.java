@@ -40,9 +40,6 @@ public class UserInfo {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "address", length = 255)
-    private String address;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -32,4 +32,7 @@ public class UserRegisterRequest {
     )
     private String password;
 
+    @NotBlank(message = "Confirm Password không được để trống")
+    private String confirmPassword;
+
 }

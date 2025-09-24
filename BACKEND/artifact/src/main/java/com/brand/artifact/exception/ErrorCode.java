@@ -15,6 +15,7 @@ public enum ErrorCode {
 	USER_NOT_FOUND(1003, "User not found", HttpStatus.NOT_FOUND),
 	USER_NOT_EXIST(1007, "User not found", HttpStatus.BAD_REQUEST),
 	USER_EXISTED(1008, "Username existed", HttpStatus.BAD_REQUEST),
+	EMAIL_EXISTED(1009, "Email existed", HttpStatus.BAD_REQUEST),
 	CART_NOT_FOUND(2000, "Cart not found", HttpStatus.NOT_FOUND),
 	CART_PRODUCT_NOT_FOUND(2001, "Product not found in cart", HttpStatus.NOT_FOUND),
 	PRODUCT_NOT_FOUND(1004, "Product not found", HttpStatus.NOT_FOUND),
@@ -25,7 +26,13 @@ public enum ErrorCode {
 	DELIVERY_INFOR_NOT_FOUND(4001, "Delivery Information not found", HttpStatus.NOT_FOUND),
 	DELIVERY_INFOR_NOT_EXIST(4002, "Delivery Information not exist", HttpStatus.BAD_REQUEST),
   	INSUFFICIENT_STOCK(2002, "Not enough in stock", HttpStatus.BAD_REQUEST),
-	ADDRESS_NOT_FOUND(4003, "Address not found", HttpStatus.NOT_FOUND);
+	ADDRESS_NOT_FOUND(4003, "Address not found", HttpStatus.NOT_FOUND),
+	PASSWORD_MISMATCH(1010, "Password and Confirm Password do not match", HttpStatus.BAD_REQUEST), 
+	USER_INFO_NOT_FOUND(1011, "User information not found", HttpStatus.NOT_FOUND);
+
+    public static ErrorCode getPASSWORD_MISMATCH() {
+        return PASSWORD_MISMATCH;
+    }
 	private final int code;
 	private final String message;
 	private final HttpStatusCode httpStatusCode;

@@ -1,6 +1,6 @@
 package com.brand.artifact.dto.response;
 
-import com.brand.artifact.constant.Role;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponse {
-    private String userId;
+public class UserInfoResponse {
+    private String infoId;
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String username;
     private String email;
-    private Role role;
 }

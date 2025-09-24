@@ -1,5 +1,8 @@
 package com.brand.artifact.entity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.annotations.UuidGenerator;
 
 import com.brand.artifact.constant.Role;
@@ -11,6 +14,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -47,8 +51,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // ✅ Password Reset fields
+    @Column(name = "reset_token")
+    private String resetToken;
+    
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+    
+    // ✅ Account status
+    @Column(name = "is_active")
+    @Builder.Default
+    private final Boolean isActive = true;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserInfo userInfo;
 
-    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Address> addresses;
 }

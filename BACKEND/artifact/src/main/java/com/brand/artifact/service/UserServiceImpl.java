@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.brand.artifact.constant.Role;
 import com.brand.artifact.dto.request.UserRegisterRequest;
-import com.brand.artifact.dto.response.UserResponse;
+import com.brand.artifact.dto.response.UserInfoResponse;
+import com.brand.artifact.dto.response.UserLoginResponse;
+import com.brand.artifact.dto.response.UserRegisterResponse;
 import com.brand.artifact.entity.User;
 import com.brand.artifact.exception.ErrorCode;
 import com.brand.artifact.exception.WebServerException;
@@ -27,27 +29,27 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse registerUser(UserRegisterRequest request) {
-        // ✅ Validation sử dụng custom exception
+    public UserRegisterResponse registerUser(UserRegisterRequest request) {
         if (existsByUsername(request.getUsername())) {
             throw new WebServerException(ErrorCode.USER_EXISTED);
         }
         if (existsByEmail(request.getEmail())) {
-            throw new WebServerException(ErrorCode.USER_EXISTED);
+            throw new WebServerException(ErrorCode.EMAIL_EXISTED);
         }
 
-        // ✅ Convert DTO to Entity (mapping pattern)
+        if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
+            throw new WebServerException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword())) // ✅ Encrypt password
-                .role(Role.USER) // ✅ Default role
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER) 
                 .build();
-
-        user = userRepository.save(user);
         
-        // ✅ Convert Entity to Response DTO (KHÔNG trả password)
-        return UserResponse.builder()
+        user = userRepository.save(user);
+        return UserRegisterResponse.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -56,18 +58,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticateUser(String usernameOrEmail, String rawPassword) {
-        // ✅ Support login bằng username hoặc email
-        Optional<User> userOpt = findByUsername(usernameOrEmail);
-        if (userOpt.isEmpty()) {
-            userOpt = findByEmail(usernameOrEmail);
+    public UserLoginResponse authenticateUser(String usernameOrEmail, String rawPassword) {
+        if (existsByEmail(usernameOrEmail) || existsByUsername(usernameOrEmail)) {
+            Optional<User> userOpt = findByEmail(usernameOrEmail);
+            if (userOpt.isEmpty()) {
+                userOpt = findByUsername(usernameOrEmail);
+            }
+            if (userOpt.isPresent() && passwordEncoder.matches(rawPassword, userOpt.get().getPassword())) {
+                User user = userOpt.get();
+                return UserLoginResponse.builder()
+                        .userId(user.getUserId())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
+                        .build();
+            }
         }
-        
-        if (userOpt.isPresent()) {
-            // ✅ Sử dụng PasswordEncoder để verify
-            return passwordEncoder.matches(rawPassword, userOpt.get().getPassword());
-        }
-        return false;
+        return null;
     }
 
     @Override
@@ -104,11 +110,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(String userId, User updatedUser) {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new WebServerException(ErrorCode.USER_NOT_FOUND));
-        
-        // ✅ Chỉ update các field được phép
         existingUser.setEmail(updatedUser.getEmail());
-        // Note: Password update nên có endpoint riêng với validation
-        
         return userRepository.save(existingUser);
     }
 
@@ -125,5 +127,22 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(userId);
         return true;
+    }
+
+    // Lấy thông tin UserInfo
+    @Override
+    @Transactional(readOnly = true)
+    public UserInfoResponse getUserInfo(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new WebServerException(ErrorCode.USER_NOT_FOUND));
+        if (user.getUserInfo() == null) {
+            throw new WebServerException(ErrorCode.USER_INFO_NOT_FOUND);
+        }
+        return UserInfoResponse.builder()
+                .firstName(user.getUserInfo().getFirstName())
+                .lastName(user.getUserInfo().getLastName())
+                .phone(user.getUserInfo().getPhone())
+                .email(user.getEmail())
+                .build();
     }
 }
