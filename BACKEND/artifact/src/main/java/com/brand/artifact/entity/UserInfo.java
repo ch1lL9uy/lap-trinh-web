@@ -48,6 +48,9 @@ public class UserInfo {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "dob")
+    private LocalDateTime dob;
+
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;

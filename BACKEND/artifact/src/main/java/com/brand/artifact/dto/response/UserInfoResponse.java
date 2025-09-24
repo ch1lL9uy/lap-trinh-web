@@ -20,4 +20,5 @@ public class UserInfoResponse {
     private LocalDateTime updatedAt;
     private String username;
     private String email;
+    private LocalDateTime dob; // ngày tháng năm sinh
 }

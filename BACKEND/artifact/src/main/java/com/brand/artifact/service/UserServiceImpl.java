@@ -1,5 +1,6 @@
 package com.brand.artifact.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,11 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.brand.artifact.constant.Role;
+import com.brand.artifact.dto.request.UserInfoRequest;
 import com.brand.artifact.dto.request.UserRegisterRequest;
 import com.brand.artifact.dto.response.UserInfoResponse;
 import com.brand.artifact.dto.response.UserLoginResponse;
 import com.brand.artifact.dto.response.UserRegisterResponse;
 import com.brand.artifact.entity.User;
+import com.brand.artifact.entity.UserInfo;
 import com.brand.artifact.exception.ErrorCode;
 import com.brand.artifact.exception.WebServerException;
 import com.brand.artifact.repository.UserRepository;
@@ -139,10 +142,50 @@ public class UserServiceImpl implements UserService {
             throw new WebServerException(ErrorCode.USER_INFO_NOT_FOUND);
         }
         return UserInfoResponse.builder()
+                .infoId(user.getUserInfo().getInfoId())
                 .firstName(user.getUserInfo().getFirstName())
                 .lastName(user.getUserInfo().getLastName())
                 .phone(user.getUserInfo().getPhone())
                 .email(user.getEmail())
+                .dob(user.getUserInfo().getDob())
+                .build();
+    }
+
+    @Override
+    public UserInfoResponse updateUserInfo(String userId, UserInfoRequest userInfoRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new WebServerException(ErrorCode.USER_NOT_FOUND));
+        
+        // ✅ Tự động tạo UserInfo nếu chưa có
+        if (user.getUserInfo() == null) {
+            user.setUserInfo(UserInfo.builder()
+                    .firstName(userInfoRequest.getFirstName())
+                    .lastName(userInfoRequest.getLastName())
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .phone(userInfoRequest.getPhone())
+                    .dob(userInfoRequest.getDob())
+                    .user(user)
+                    .build());
+        } else {
+            // ✅ Update nếu đã có
+            user.getUserInfo().setFirstName(userInfoRequest.getFirstName());
+            user.getUserInfo().setLastName(userInfoRequest.getLastName());
+            user.getUserInfo().setPhone(userInfoRequest.getPhone());
+            user.getUserInfo().setDob(userInfoRequest.getDob());
+        }
+
+        user = userRepository.save(user);
+        return UserInfoResponse.builder()
+                .infoId(user.getUserInfo().getInfoId())
+                .firstName(user.getUserInfo().getFirstName())
+                .lastName(user.getUserInfo().getLastName())
+                .phone(user.getUserInfo().getPhone())
+                .email(user.getEmail())
+                .createdAt(user.getUserInfo().getCreatedAt())
+                .updatedAt(user.getUserInfo().getUpdatedAt())
+                .dob(user.getUserInfo().getDob())
+                .username(user.getUsername())
                 .build();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brand.artifact.dto.request.UserInfoRequest;
 import com.brand.artifact.dto.request.UserLoginRequest;
 import com.brand.artifact.dto.request.UserRegisterRequest;
 import com.brand.artifact.dto.response.ResponseAPITemplate;
@@ -50,7 +51,20 @@ public class UserController {
                 .build();   
     }
 
-    @GetMapping("/{userId}/info")
+    @PostMapping("/{userId}/info")
+    public ResponseAPITemplate<UserInfoResponse> updateUserInfo(@PathVariable String userId,
+            @Valid @RequestBody UserInfoRequest userInfoRequest) {
+        // Giả sử bạn đã có phương thức cập nhật thông tin người dùng trong UserService
+        UserInfoResponse updatedUserInfo = userService.updateUserInfo(userId, userInfoRequest);
+
+        return ResponseAPITemplate.<UserInfoResponse>builder()
+                .code(200) // OK status
+                .message("Cập nhật thông tin người dùng thành công")
+                .result(updatedUserInfo)
+                .build();
+    }
+
+    @GetMapping("/{userId}")
     public ResponseAPITemplate<UserInfoResponse> getUserInfo(@PathVariable String userId) {
         UserInfoResponse userInfoResponse = userService.getUserInfo(userId);
 
