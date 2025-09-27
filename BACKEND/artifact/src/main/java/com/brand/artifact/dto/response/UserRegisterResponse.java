@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserRegisterResponse {
     private String userId;
-    private String username;
     private String email;
     private Role role;
 

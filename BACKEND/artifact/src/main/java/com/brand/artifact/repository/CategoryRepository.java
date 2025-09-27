@@ -23,8 +23,8 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     boolean existsBySlug(String slug);
     
     // Tìm categories cha (không có parent)
-    List<Category> findByParentIdIsNull();
+    List<Category> findByParentCategoryIsNull();
     
     // Tìm subcategories của một category
-    List<Category> findByParentId(String parentId);
+    List<Category> findByParentCategory_CategoryId(String parentCategoryId);
 }

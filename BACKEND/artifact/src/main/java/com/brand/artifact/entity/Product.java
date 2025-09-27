@@ -39,8 +39,8 @@ public class Product {
     @Column(length = 512)
     private String description;
 
-    @Column(nullable = false)
-    private String imageUrl;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> images;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -56,4 +56,15 @@ public class Product {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    // Trạng thái (active, inactive)
+    // Để có thể ẩn/hiện sản phẩm
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
+
+    // Sản phẩm nổi bật
+    @Column(name = "is_featured")
+    @Builder.Default
+    private Boolean isFeatured = false;
 }

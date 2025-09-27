@@ -1,6 +1,6 @@
 package com.brand.artifact.dto.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,5 +21,5 @@ public class UserInfoRequest {
     @NotBlank(message = "Số điện thoại không được để trống")
     @Pattern(regexp = "^(\\+\\d{1,3}[- ]?)?\\d{10}$", message = "Số điện thoại không hợp lệ")
     private String phone;
-    private LocalDateTime dob; // ngày tháng năm sinh
+    private LocalDate dob; // ngày tháng năm sinh
 }

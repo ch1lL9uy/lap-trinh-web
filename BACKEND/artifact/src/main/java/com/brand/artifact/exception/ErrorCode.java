@@ -28,7 +28,9 @@ public enum ErrorCode {
   	INSUFFICIENT_STOCK(2002, "Not enough in stock", HttpStatus.BAD_REQUEST),
 	ADDRESS_NOT_FOUND(4003, "Address not found", HttpStatus.NOT_FOUND),
 	PASSWORD_MISMATCH(1010, "Password and Confirm Password do not match", HttpStatus.BAD_REQUEST), 
-	USER_INFO_NOT_FOUND(1011, "User information not found", HttpStatus.NOT_FOUND);
+	USER_INFO_NOT_FOUND(1011, "User information not found", HttpStatus.NOT_FOUND),
+	INVALID_TOKEN(1012, "Invalid or expired token", HttpStatus.UNAUTHORIZED),
+	TOKEN_EXPIRED(1013, "Token has expired", HttpStatus.UNAUTHORIZED);
 
     public static ErrorCode getPASSWORD_MISMATCH() {
         return PASSWORD_MISMATCH;

@@ -1,5 +1,7 @@
 package com.brand.artifact.dto.response;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -20,5 +22,5 @@ public class UserInfoResponse {
     private LocalDateTime updatedAt;
     private String username;
     private String email;
-    private LocalDateTime dob; // ngày tháng năm sinh
+    private LocalDate dob; // ngày tháng năm sinh
 }

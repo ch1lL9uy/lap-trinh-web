@@ -1,5 +1,6 @@
 package com.brand.artifact.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,7 +50,7 @@ public class UserInfo {
     private LocalDateTime updatedAt;
 
     @Column(name = "dob")
-    private LocalDateTime dob;
+    private LocalDate dob;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)

@@ -45,10 +45,6 @@ public class Category {
     @Column(name = "image_url")
     private String imageUrl;
 
-    // 4. Hierarchy support (Category con/cha)
-    @Column(name = "parent_id")
-    private String parentId; 
-    
     // 5. Display order
     @Column(name = "sort_order")
     private Integer sortOrder;
@@ -70,11 +66,16 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products;
     
-    // 10. Self-referencing for subcategories
+    // 10. Self-referencing for subcategories - FIX CONFLICT
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", insertable = false, updatable = false)
+    @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
     
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY)
     private List<Category> subCategories;
+
+    @Column(name = "is_active")
+    @Builder.Default
+    private Boolean isActive = true;
+
 }
