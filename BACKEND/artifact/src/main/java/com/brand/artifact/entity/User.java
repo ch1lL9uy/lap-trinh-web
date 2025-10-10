@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.UuidGenerator;
 
+import com.brand.artifact.constant.AuthProvider;
 import com.brand.artifact.constant.Role;
 
 import jakarta.persistence.CascadeType;
@@ -51,21 +52,34 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // ✅ Password Reset fields
     @Column(name = "reset_token")
     private String resetToken;
     
     @Column(name = "reset_token_expiry")
     private LocalDateTime resetTokenExpiry;
-    
-    // ✅ Account status
+
     @Column(name = "is_active")
     @Builder.Default
-    private final Boolean isActive = true;
+    private Boolean isActive = true;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserInfo userInfo;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Address> addresses;
+
+    //Oauth2 login google, facebook
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false)
+    @Builder.Default
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(name = "provider_id", unique = true)
+    private String providerId;
+
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
+
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
 }

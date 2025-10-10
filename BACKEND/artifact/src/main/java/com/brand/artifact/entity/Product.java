@@ -46,7 +46,6 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // Một Product có nhiều biến thể (ProductItem)
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductItem> productItems;
 

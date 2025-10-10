@@ -11,12 +11,7 @@ import com.brand.artifact.entity.User;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, String> {
-    // Tìm addresses theo userId
     List<Address> findByUserUserId(String userId);
-    
-    // Tìm default address của user
     Optional<Address> findByUserAndIsDefaultTrue(User user);
-    
-    // Đếm số addresses của user
     long countByUser(User user);
 }

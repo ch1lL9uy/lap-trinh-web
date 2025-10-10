@@ -75,8 +75,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
         return true;
     }
-
-    // Lấy thông tin UserInfo
+    
     @Override
     @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(String userId) {
@@ -102,8 +101,6 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponse updateUserInfo(String userId, UserInfoRequest userInfoRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new WebServerException(ErrorCode.USER_NOT_FOUND));
-        
-        // ✅ Tự động tạo UserInfo nếu chưa có
         if (user.getUserInfo() == null) {
             user.setUserInfo(UserInfo.builder()
                     .firstName(userInfoRequest.getFirstName())

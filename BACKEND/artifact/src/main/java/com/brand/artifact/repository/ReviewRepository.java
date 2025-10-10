@@ -11,16 +11,8 @@ import com.brand.artifact.entity.User;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, String> {
-    
-    // Tìm reviews của user
     List<Review> findByUser(User user);
-    
-    // Tìm reviews của một OrderItem
     List<Review> findByOrderItem(OrderItem orderItem);
-    
-    // Tìm reviews theo rating
     List<Review> findByRating(Integer rating);
-    
-    // Tìm reviews với rating >= threshold
     List<Review> findByRatingGreaterThanEqual(Integer rating);
 }

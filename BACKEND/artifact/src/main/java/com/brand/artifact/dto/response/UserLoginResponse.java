@@ -13,5 +13,9 @@ public class UserLoginResponse {
     private String userId;
     private String username;
     private String email;
-    private String token;
+    private String tokenType;
+    private String accessToken;
+    private long accessTokenExpiresIn;
+    private String refreshToken;
+    private long refreshTokenExpiresIn;
 }

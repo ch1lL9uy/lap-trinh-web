@@ -22,24 +22,21 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        // Tìm user theo username hoặc email
         User user = userRepository.findByUsername(usernameOrEmail)
                 .or(() -> userRepository.findByEmail(usernameOrEmail))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + usernameOrEmail));
 
-        // Tạo authorities từ role
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
-        // Return Spring Security UserDetails
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(authorities)
                 .accountExpired(false)
-                .accountLocked(!user.getIsActive()) // Nếu user inactive thì lock account
+                .accountLocked(!user.getIsActive())
                 .credentialsExpired(false)
-                .disabled(!user.getIsActive()) // Nếu user inactive thì disable
+                .disabled(!user.getIsActive()) 
                 .build();
     }
 }

@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brand.artifact.dto.request.UserInfoRequest;
+import com.brand.artifact.dto.request.UserRegisterRequest;
 import com.brand.artifact.dto.response.ResponseAPITemplate;
 import com.brand.artifact.dto.response.UserInfoResponse;
+import com.brand.artifact.dto.response.UserRegisterResponse;
+import com.brand.artifact.service.AuthService;
 import com.brand.artifact.service.UserService;
 
 import jakarta.validation.Valid;
@@ -24,6 +27,19 @@ public class UserController {
 
     @Autowired
     public UserService userService;
+
+    @Autowired
+    private AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseAPITemplate<UserRegisterResponse> registerUser(@Valid @RequestBody UserRegisterRequest request) {
+        UserRegisterResponse userResponse = authService.registerUser(request);
+        return ResponseAPITemplate.<UserRegisterResponse>builder()
+                .code(200)
+                .message("Đăng ký thành công")
+                .result(userResponse)
+                .build();
+    }
 
     @PostMapping("/{userId}/info")
     @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF') or (hasRole('USER'))")

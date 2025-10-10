@@ -30,7 +30,9 @@ public enum ErrorCode {
 	PASSWORD_MISMATCH(1010, "Password and Confirm Password do not match", HttpStatus.BAD_REQUEST), 
 	USER_INFO_NOT_FOUND(1011, "User information not found", HttpStatus.NOT_FOUND),
 	INVALID_TOKEN(1012, "Invalid or expired token", HttpStatus.UNAUTHORIZED),
-	TOKEN_EXPIRED(1013, "Token has expired", HttpStatus.UNAUTHORIZED);
+	TOKEN_EXPIRED(1013, "Token has expired", HttpStatus.UNAUTHORIZED),
+	GOOGLE_LOGIN_FAILED(1014, "Google login failed", HttpStatus.UNAUTHORIZED);
+
 
     public static ErrorCode getPASSWORD_MISMATCH() {
         return PASSWORD_MISMATCH;

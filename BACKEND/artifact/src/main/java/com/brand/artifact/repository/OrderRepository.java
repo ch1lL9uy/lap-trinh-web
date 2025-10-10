@@ -14,14 +14,10 @@ import com.brand.artifact.entity.User;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String> {
-    
-    // Tìm orders của user
     List<Order> findByUser(User user);
-    
-    // Tìm orders theo status
+
     List<Order> findByStatus(OrderStatus status);
-    
-    // Tìm orders của user theo status
+
     List<Order> findByUserAndStatus(User user, OrderStatus status);
 
     @Query("SELECT o FROM Order o WHERE o.user = :user ORDER BY o.orderDate DESC")

@@ -55,4 +55,7 @@ public class UserInfo {
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
+
+    @Column(name = "avatar_url", length = 255)
+    private String avatarUrl;   
 }
